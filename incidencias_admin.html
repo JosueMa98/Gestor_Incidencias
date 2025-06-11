@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incidencias Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column">
+    <h4 class="text-center mb-4">Panel de Administrador</h4>
+    <a href="dashboard_admin.html" class="nav-link">Inicio</a>
+    <a href="problemas_admin.html" class="nav-link">Problemas</a>
+    <a href="incidencias_admin.html" class="nav-link">Incidencias</a>
+    <a href="cambios_admin.html" class="nav-link">Cambios</a>
+    <a href="configuraciones.html" class="nav-link">Configuraciones</a>
+    <a href="#" class="nav-link mt-auto" onclick="cerrarSesion()">Cerrar sesión</a>
+  </div>
+
+  <!-- Barra fija superior -->
+  <div class="barra-coppel">
+    <img src="imagenes/coppel.png" alt="Logo Coppel"  />
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <h2 class="text-center mb-4">Gestión de Incidencias</h2>
+
+    <div class="d-flex justify-content-end align-items-center mb-3">
+      <label for="filtroEstado" class="me-2 fw-bold text-primary">Filtrar por estado:</label>
+      <select id="filtroEstado" class="form-select w-auto">
+        <option value="Todos">Todos</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="Asignada">Asignada</option>
+        <option value="Resuelta">Resuelta</option>
+        <option value="Rechazada">Rechazada</option>
+        <option value="Aceptada">Aceptada</option>
+      </select>
+    </div>
+
+    <div class="table-responsive">
+      <table id="tablaIncidencias" class="table table-bordered text-center">
+          <div id="mensaje12" class="mt-3"></div>
+
+        <thead>
+          <tr>
+            <th>(ID) - Título</th>
+            <th>Descripción</th>
+            <th>Equipo</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Fecha Creación</th>
+            <th>Fecha Resolución</th>
+            <th>Área</th>
+            <th>Técnico Asignado</th>
+            <th>Fecha de Asignación</th>
+            <th>Escalar a Problema</th>
+            <th>Finalizar</th>
+           
+          </tr>
+        </thead>
+        <tbody id="listaIncidencias"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+<!-- Modal Detalles de la Incidencia -->
+<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content shadow-lg">
+
+      <form id="formModalDetalles">
+
+        <!-- Campos ocultos -->
+        <input type="hidden" id="idIncidenciaSeleccionada" name="idIncidenciaSeleccionada">
+        <input type="hidden" id="equipoSeleccionado" name="equipoSeleccionado">
+
+        <!-- Header -->
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalDetallesLabel"><i class="bi bi-info-circle"></i> Detalles de la Incidencia</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label for="modalTitulo" class="form-label fw-bold">Título</label>
+              <input type="text" class="form-control" id="modalTitulo" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalEquipo" class="form-label fw-bold">Equipo</label>
+              <input type="text" class="form-control" id="modalEquipo" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalPrioridad" class="form-label fw-bold">Prioridad</label>
+              <select id="modalPrioridad" class="form-select">
+                <option value="Crítica">Crítica</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalEstado" class="form-label fw-bold">Estado</label>
+              <select id="modalEstado" class="form-select">
+                <option value="Asignada">Asignada</option>
+                <option value="Resuelta">Resuelta</option>
+                <option value="Rechazada">Rechazada</option>
+                <option value="Aceptada">Aceptada</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalFechaCreacion" class="form-label fw-bold">Fecha Creación</label>
+              <input type="text" class="form-control" id="modalFechaCreacion" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalFechaResolucion" class="form-label fw-bold">Fecha Resolución</label>
+              <input type="text" class="form-control" id="modalFechaResolucion" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalTecnico" class="form-label fw-bold">Asignar Técnico</label>
+              <select id="modalTecnico" class="form-select">
+                <!-- Se llena dinámicamente -->
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalDiagnostico" class="form-label fw-bold">Diagnóstico</label>
+              <input type="text" class="form-control" id="modalDiagnostico" disabled>
+            </div>
+
+          </div>
+
+          <div id="mensaje123" class="mt-4"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-primary px-4" id="btnGuardarCambiosModal" onclick="asignarIncidencia()">
+            <i class="bi bi-save"></i> Guardar Cambios
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+    <!-- Modal para ver problemas -->
+  <div class="modal fade" id="modalProblemas" tabindex="-1" aria-labelledby="modalProblemasLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 900px;">
+      <div class="modal-content">
+
+        <form id="formModalProblemas">
+
+          <input type="hidden" id="pendiente" name="pendiente">
+
+        
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalProblemasLabel">Problemas de la Incidencia</h5>
+            <button type="button" class="btn-close" id="btnCerrarProblemas" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          
+          <div class="modal-body mb-0 py-2">
+
+            <div class="mb-2 d-flex align-items-center">
+              <label for="modalMotivoProblema" class="form-label me-2" style="width: 150px;"><strong>Motivo del problema:</strong></label>
+              <textarea class="form-control" id="modalMotivoProblema"  rows=2 ></textarea>
+            </div>
+
+
+            <div class="mb-0 d-flex align-items-center">
+              <label for="modalTecnicoProblema" class="form-label me-2" style="width: 350px;"><strong>Asignar Tecnico de Problemas:</strong></label>
+              <select id="modalTecnicoProblema" class="form-select">
+
+              </select>
+            </div>
+
+            <div id="mensajeModalProblemasAdmin" class="mt-3"></div>
+
+          </div>
+          
+          <!-- FOOTER con botón Guardar -->
+          <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-primary" id="btnGuardarProblemaModal" onclick="guardarProblema()" >Guardar Cambios</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/mensaje.js"></script>
+  <script src="js/incidenciasAdmin.js"></script>
+  <script src="js/logout.js"></script>
+  
+</body>
+
+</html>

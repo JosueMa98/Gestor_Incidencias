@@ -1,0 +1,92 @@
+
+    body {
+      background-color: #f4f4f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+      background-color: #f7d600;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .nav-link {
+      color: #003d6b !important;
+      font-weight: bold;
+    }
+
+    .navbar-logo {
+      height: 40px;
+    }
+
+    h2 {
+      color: #003d6b;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+
+    .container-table {
+      max-width: 95%;
+      margin: 30px auto;
+      overflow-x: auto;
+    }
+
+    .table {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .table thead th {
+      background-color: #003d6b;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .table tbody td {
+      background-color: #fefefe;
+      color: #003d6b;
+      transition: background-color 0.2s ease;
+    }
+
+    .table tbody tr:nth-child(even) td {
+      background-color: #f9f9f9;
+    }
+
+    .table tbody tr:hover td {
+      background-color: #fff3b0;
+      color: #003d6b;
+      cursor: pointer;
+      transform: scale(1.005);
+    }
+
+    .table .btn-rounded {
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .table .btn-warning {
+      background-color: #f7d600;
+      color: #003d6b;
+      border: none;
+    }
+
+    .table .btn-warning:hover {
+      background-color: #e6c200;
+      color: white;
+    }
+
+    .badge-status {
+      font-size: 0.85rem;
+      padding: 0.4em 0.7em;
+      border-radius: 0.6rem;
+    }
+ 

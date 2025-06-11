@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard normal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/tecnico.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+<body>
+
+   <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="dashboard_normal.html">
+        <img src="imagenes/coppel.png" alt="Logo Coppel" class="navbar-logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <a class="nav-link" href="#" onclick="cerrarSesion()">Cerrar sesión</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-table">
+
+    <h2 class="text-center mb-4">Bienvenido <span id="puesto_usuario"></span></h2>
+    <h2 class="text-center">Problemas Asignados</h2>
+    <div id="mensajeGuardarCambios" class="mt-3 text-center"></div>
+    <table id="tablaProblemas" class="table table-bordered text-center">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Incidencia</th>
+          <th>Equipo</th>
+          <th>Estado</th>
+          <th>Fecha de Creación</th>
+          <th>Fecha Solución</th>
+        </tr>
+      </thead>
+      <tbody id="listaProblemas"></tbody>
+    </table>
+  </div>
+
+<!-- Modal Detalles del Equipo (Problemas) -->
+<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content shadow">
+
+      <form id="formModalDetalles">
+
+        <!-- Campos ocultos -->
+        <input type="hidden" id="idProblemaSeleccionado" name="idProblemaSeleccionado">
+        <input type="hidden" id="idEquipoSeleccionado" name="idEquipoSeleccionado">
+        <input type="hidden" id="diagnosticoAsignado" name="diagnosticoAsignado">
+        <input type="hidden" id="verificarResuelto" name="verificarResuelto">
+
+        <!-- Encabezado -->
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title mx-auto" id="modalDetallesLabel">
+            <i class="bi bi-bug-fill"></i> Detalles del Equipo con Problema
+          </h5>
+          <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Cuerpo con scroll interno -->
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label for="modalEquipo" class="form-label fw-bold">Equipo</label>
+              <input type="text" class="form-control" id="modalEquipo" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalEstado" class="form-label fw-bold">Estado</label>
+              <select id="modalEstado" class="form-select">
+                <option value="En Investigacion">En Investigación</option>
+                <option value="Solucionado">Solucionado</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalModelo" class="form-label fw-bold">Modelo</label>
+              <input type="text" class="form-control" id="modalModelo" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalTipoMemoria" class="form-label fw-bold">Tipo Memoria</label>
+              <input type="text" class="form-control" id="modalTipoMemoria" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalCapacidadMemoria" class="form-label fw-bold">Capacidad Memoria</label>
+              <input type="text" class="form-control" id="modalCapacidadMemoria" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalProcesador" class="form-label fw-bold">Procesador</label>
+              <input type="text" class="form-control" id="modalProcesador" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalRAM" class="form-label fw-bold">RAM</label>
+              <input type="text" class="form-control" id="modalRAM" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalSistemaOperativo" class="form-label fw-bold">Sistema Operativo</label>
+              <input type="text" class="form-control" id="modalSistemaOperativo" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalTipoFuente" class="form-label fw-bold">Tipo Fuente</label>
+              <input type="text" class="form-control" id="modalTipoFuente" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalFechaAdquisicion" class="form-label fw-bold">Fecha Adquisición</label>
+              <input type="text" class="form-control" id="modalFechaAdquisicion" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalGarantia" class="form-label fw-bold">Garantía</label>
+              <input type="text" class="form-control" id="modalGarantia" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalArea" class="form-label fw-bold">Área</label>
+              <input type="text" class="form-control" id="modalArea" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="modalUbicacion" class="form-label fw-bold">Ubicación</label>
+              <input type="text" class="form-control" id="modalUbicacion" disabled>
+            </div>
+
+            <div class="col-md-12">
+              <label for="modalSoftware" class="form-label fw-bold">Software Instalado</label>
+              <textarea class="form-control" id="modalSoftware" rows="2" disabled></textarea>
+            </div>
+
+            <div class="col-md-12">
+              <label for="modalMotivo" class="form-label fw-bold">Motivo</label>
+              <textarea class="form-control" id="modalMotivo" rows="2" disabled></textarea>
+            </div>
+
+            <div class="col-md-12">
+              <label for="modalSolucion" class="form-label fw-bold">Solución</label>
+              <textarea class="form-control" id="modalSolucion" rows="2"></textarea>
+            </div>
+
+          </div>
+
+          <div id="mensajemodal" class="mt-3"></div>
+        </div>
+
+        <!-- Footer FUERA del scroll -->
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-success px-4" id="btnGuardarCambiosModal" onclick="solucionarProblema()">
+            <i class="bi bi-check2-circle"></i> Solucionar Problema
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/problemasTecnico.js"></script>
+<script src="js/mensaje.js"></script>
+
+<script src="js/logout.js"></script>
+</body>
+</html>

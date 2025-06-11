@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incidencias Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column">
+    <h4 class="text-center mb-4">Panel de Administrador</h4>
+    <a href="dashboard_admin.html" class="nav-link">Inicio</a>
+    <a href="problemas_admin.html" class="nav-link">Problemas</a>
+    <a href="incidencias_admin.html" class="nav-link">Incidencias</a>
+    <a href="cambios_admin.html" class="nav-link">Cambios</a>
+    <a href="configuraciones.html" class="nav-link">Configuraciones</a>
+    <a href="#" class="nav-link mt-auto" onclick="cerrarSesion()">Cerrar sesión</a>
+  </div>
+
+  <!-- Barra fija superior -->
+  <div class="barra-coppel">
+    <img src="imagenes/coppel.png" alt="Logo Coppel"  />
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <h2 class="text-center mb-4">Gestión de Configuraciones</h2>
+
+    <div class="d-flex justify-content-end align-items-center mb-3">
+      <label for="filtroArea" class="me-2 fw-bold text-primary">Filtrar por Area:</label>
+      <select id="filtroArea" class="form-select w-auto">
+        <option value="Todas">Todas</option>
+        <option value="Coordinación de Cobranza STAF">Coordinación de Cobranza STAF</option>
+        <option value="Coordinación de Gestiones de Tiendas">Coordinación de Gestiones de Tiendas</option>
+        <option value="Coordinación de Servicios Financieros">Coordinación de Servicios Financieros</option>
+        <option value="Inventario Comercial">Inventario Comercial</option>
+        <option value="Operaciones">Operaciones</option>
+      </select>
+    </div>
+
+    <!-- Botón abrir modal laptop -->
+    <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalRegistroLaptop">
+      Registrar nueva Laptop
+    </button>
+
+    <!-- Botón para abrir modal monitor -->
+    <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalRegistroMonitor">
+      Registrar nuevo Monitor
+    </button>
+        <div id="mensaje12" class="mt-3"></div>
+
+    <div class="table-responsive">
+      <table id="tablaEquipos" class="table table-bordered text-center">
+
+        <thead>
+          <tr>
+            <th>ID - Equipo</th>
+            <th>Estado</th>
+            <th>Fecha Adquisición</th>
+            <th>Área</th>
+            <th>Ubicación</th>
+          </tr>
+        </thead>
+        <tbody id="listaEquipos"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+<!-- Modal Laptop -->
+<div class="modal fade" id="modalRegistroLaptop" tabindex="-1" aria-labelledby="modalRegistroLaptopLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #f7d600; color: #003d6b;">
+        <h5 class="modal-title" id="modalRegistroLaptopLabel">Alta de Laptop Lenovo ThinkPad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="laptopForm">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">Modelo</label>
+              <select name="modelo" class="form-select" required>
+                <option value="">-- Selecciona modelo --</option>
+                <option value="ThinkPad L14">ThinkPad L14</option>
+                <option value="ThinkPad T14">ThinkPad T14</option>
+                <option value="ThinkPad X1 Carbon">ThinkPad X1 Carbon</option>
+                <option value="ThinkPad E15">ThinkPad E15</option>
+                <option value="ThinkPad P14s">ThinkPad P14s</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Procesador</label>
+              <select name="procesador" class="form-select" required>
+                <option value="">-- Selecciona procesador --</option>
+                <option value="Intel i5">Intel i5</option>
+                <option value="Intel i7">Intel i7</option>
+                <option value="Intel i9">Intel i9</option>
+                <option value="AMD Ryzen 5">AMD Ryzen 5</option>
+                <option value="AMD Ryzen 7">AMD Ryzen 7</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tipo de Memoria</label>
+              <select name="tipo_memoria" class="form-select" required>
+                <option value="">-- Selecciona tipo --</option>
+                <option value="SSD">SSD</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">Capacidad</label>
+              <select name="capacidad_memoria" class="form-select" required>
+                <option value="">-- Selecciona capacidad --</option>
+                <option value="256 GB">256 GB</option>
+                <option value="512 GB">512 GB</option>
+                <option value="1 TB">1 TB</option>
+                <option value="2 TB">2 TB</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">RAM</label>
+              <select name="ram" class="form-select" required>
+                <option value="">-- Selecciona RAM --</option>
+                <option value="8 GB">8 GB</option>
+                <option value="16 GB">16 GB</option>
+                <option value="32 GB">32 GB</option>
+                <option value="64 GB">64 GB</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tipo de Fuente</label>
+              <select name="tipo_fuente" class="form-select" required>
+                <option value="">-- Selecciona fuente --</option>
+                <option value="Original Lenovo 65W">Original Lenovo 65W</option>
+                <option value="Original Lenovo 90W">Original Lenovo 90W</option>
+                <option value="Universal 65W">Universal 65W</option>
+                <option value="Universal 90W">Universal 90W</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">Sistema Operativo</label>
+              <select name="sistema_operativo" class="form-select" required>
+                <option value="">-- Selecciona sistema --</option>
+                <option value="Windows 11">Windows 11</option>
+                <option value="Windows 10">Windows 10</option>
+                <option value="Ubuntu Linux">Ubuntu Linux</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Software's instalados</label>
+              <select name="software[]" class="form-select" multiple required>
+                <option value="Office 365">Office 365</option>
+                <option value="Microsoft Teams">Microsoft Teams</option>
+                <option value="Zoom">Zoom</option>
+                <option value="Google Chrome">Google Chrome</option>
+                <option value="Adobe Acrobat">Adobe Acrobat</option>
+                <option value="Visual Studio Code">Visual Studio Code</option>
+                <option value="Notepad++">Notepad++</option>
+                <option value="AutoCAD">AutoCAD</option>
+                <option value="Photoshop">Photoshop</option>
+                <option value="Slack">Slack</option>
+              </select>
+              <small class="form-text text-muted">Usa Ctrl (Windows) o Cmd (Mac) para seleccionar múltiples opciones.</small>
+            </div>
+          </div> <!-- 🔧 CIERRE QUE FALTABA AQUÍ -->
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label class="form-label">Fecha de Adquisición</label>
+              <input type="date" class="form-control" name="fecha_adquisicion" required />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">¿Tiene Garantía?</label>
+              <select class="form-select" name="garantia" required>
+                <option value="1">Sí</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Área Asignada</label>
+              <select class="form-select" name="area_id" required>
+                <option value="">-- Selecciona área --</option>
+                <option value="1">Coordinación de Cobranza STAF</option>
+                <option value="2">Coordinación de Gestiones de Tiendas</option>
+                <option value="3">Coordinación de Servicios Financieros</option>
+                <option value="4">Inventario Comercial</option>
+                <option value="5">Operaciones</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="text-end">
+            <button type="button" onclick="registrarLaptop()" class="btn" style="background-color: #f7d600; color: #003d6b;">
+              Registrar Laptop
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalRegistroMonitor" tabindex="-1" aria-labelledby="modalRegistroMonitorLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #f7d600; color: #003d6b;">
+        <h5 class="modal-title" id="modalRegistroMonitorLabel">Alta de Monitor Lenovo ThinkVision</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="formularioMonitor">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="marca_monitor" class="form-label">Marca</label>
+              <select name="marca_monitor" id="marca_monitor" class="form-select" required>
+                <option value="">-- Selecciona marca --</option>
+                <option value="Lenovo ThinkVision" selected>Lenovo ThinkVision</option>
+                <option value="Dell">Dell</option>
+                <option value="HP">HP</option>
+                <option value="ASUS">ASUS</option>
+                <option value="Acer">Acer</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="modelo_monitor" class="form-label">Modelo</label>
+              <select name="modelo_monitor" id="modelo_monitor" class="form-select" required>
+                <option value="">-- Selecciona modelo --</option>
+                <option value="63E2KAC6LA">63E2KAC6LA</option>
+                <option value="T24i-30">T24i-30</option>
+                <option value="P27h-20">P27h-20</option>
+                <option value="T27p-10">T27p-10</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="tam_pantalla_monitor" class="form-label">Tamaño de pantalla</label>
+              <select name="tam_pantalla_monitor" id="tam_pantalla_monitor" class="form-select" required>
+                <option value="">-- Selecciona tamaño --</option>
+                <option value="21 pulgadas">21 pulgadas</option>
+                <option value="23.8 pulgadas">23.8 pulgadas</option>
+                <option value="24 pulgadas">24 pulgadas</option>
+                <option value="27 pulgadas">27 pulgadas</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="resolucion_monitor" class="form-label">Resolución</label>
+              <select name="resolucion_monitor" id="resolucion_monitor" class="form-select" required>
+                <option value="">-- Selecciona resolución --</option>
+                <option value="HD (1366x768)">HD (1366x768)</option>
+                <option value="Full HD (1920x1080)">Full HD (1920x1080)</option>
+                <option value="Quad HD (2560x1440)">Quad HD (2560x1440)</option>
+                <option value="4K UHD (3840x2160)">4K UHD (3840x2160)</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="tipo_panel" class="form-label">Tipo de Panel</label>
+              <select name="tipo_panel" id="tipo_panel" class="form-select" required>
+                <option value="">-- Selecciona tipo de panel --</option>
+                <option value="IPS">IPS</option>
+                <option value="VA">VA</option>
+                <option value="TN">TN</option>
+                <option value="OLED">OLED</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="frecuencia" class="form-label">Frecuencia de actualización</label>
+              <select name="frecuencia" id="frecuencia" class="form-select" required>
+                <option value="">-- Selecciona frecuencia --</option>
+                <option value="60Hz">60Hz</option>
+                <option value="75Hz">75Hz</option>
+                <option value="120Hz">120Hz</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="puertos" class="form-label">Puertos Disponibles</label>
+              <select name="puertos[]" id="puertos" class="form-select" multiple required>
+                <option value="HDMI">HDMI</option>
+                <option value="DisplayPort">DisplayPort</option>
+                <option value="VGA">VGA</option>
+                <option value="USB-C">USB-C</option>
+                <option value="USB-A">USB-A</option>
+              </select>
+              <small class="form-text text-muted">Usa Ctrl (Windows) o Cmd (Mac) para seleccionar múltiples puertos.</small>
+            </div>
+
+            <div class="col-md-4">
+              <label for="tipo_conexion" class="form-label">Tipo de conexión</label>
+              <select name="tipo_conexion" id="tipo_conexion" class="form-select" required>
+                <option value="">-- Selecciona tipo --</option>
+                <option value="Cable">Cable</option>
+                <option value="Docking Station">Docking Station</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 🟨 ESTA era la fila abierta que faltaba cerrar -->
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="fecha_adquisicion_monitor" class="form-label">Fecha de Adquisición</label>
+              <input type="date" id="fecha_adquisicion_monitor" class="form-control" name="fecha_adquisicion_monitor" required />
+            </div>
+
+            <div class="col-md-3">
+              <label for="garantia_monitor" class="form-label">¿Tiene Garantía?</label>
+              <select class="form-select" id="garantia_monitor" name="garantia_monitor" required>
+                <option value="1">Sí</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label for="area_asignada_monitor" class="form-label">Área Asignada</label>
+              <select class="form-select" id="area_asignada_monitor" name="area_asignada_monitor" required>
+                <option value="">-- Selecciona área --</option>
+                <option value="1">Coordinación de Cobranza STAF</option>
+                <option value="2">Coordinación de Gestiones de Tiendas</option>
+                <option value="3">Coordinación de Servicios Financieros</option>
+                <option value="4">Inventario Comercial</option>
+                <option value="5">Operaciones</option>
+              </select>
+            </div>
+          </div> <!-- ✅ ESTE cierre faltaba -->
+
+          <div class="text-end">
+            <button type="button" onclick="registrarMonitor()" class="btn" style="background-color: #f7d600; color: #003d6b">
+              Registrar monitor
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Detalles de Equipo -->
+<div class="modal fade" id="modalDetallesEquipo" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalDetallesLabel">Detalles del Equipo</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-striped">
+          <tbody id="tablaDetallesEquipo"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/logout.js"></script>
+  <script src="js/mensaje.js"></script>
+  <script src="js/configuraciones.js"></script>
+
+
+</body>
+</html>
