@@ -83,12 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 });
             } else {
-                mostrarMensaje(data.message, "danger");
+                console.error(data.message, "danger");
             }
         })
         .catch(err => {
             console.error("Error al obtener tecnicos:", err);
-            mostrarMensaje("Error en la conexión.", "danger");
+            console.error("Error en la conexión.", "danger");
         });
 
 });//fin domContent
@@ -100,28 +100,28 @@ function obtenerIncidencias() {
 
     const usuario_id = usuario.id;
     const tipo_usuario = usuario.rol;
-    console.log("Tipo usuario osea tipo_usuario: ", tipo_usuario);
+    console.log("Tipo de rol a enviar: ", tipo_usuario);
+    console.log("id usuario a enviar: ", usuario_id);
 
-    fetch("php/api.php?action=obtenerIncidencias", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuario_id, tipo_usuario })
-    })
-        .then(res => res.json())
-        .then(data => {
+        fetch("php/api.php?action=obtenerIncidencias", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario_id, tipo_usuario })
+        })
+        .then(res => res.text())  // 👈 usa text() en lugar de json()
+        .then(texto => {
+            console.log("Respuesta RAW de la API:", texto);  // ⬅️ aquí sabrás si viene vacío o roto
+            const data = JSON.parse(texto);  // si todo va bien, parseas manualmente
             if (data.success) {
-                console.log("incidencias obtenidas: ", data.incidencias)
                 mostrarIncidencias(data.incidencias);
                 todasLasIncidencias = data.incidencias;
-                //renderizarTabla(todasLasIncidencias);
-
             } else {
-                mostrarMensaje(data.message, "danger");
+                console.error(data.message, "danger");
             }
         })
         .catch(err => {
             console.error("Error al obtener incidencias:", err);
-            mostrarMensaje("Error en la conexión.", "danger");
+            console.error("Error en la conexión.", "danger");
         });
 }
 

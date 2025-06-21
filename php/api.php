@@ -68,8 +68,18 @@ switch ($action) {
     break;
     
     case 'obtenerIncidencias':
+        error_log("🧪 Entrando al case obtenerIncidencias");
         $respuesta = obtenerIncidencias($inputData, $conn);
+        error_log("Respuesta PHP: " . print_r($respuesta, true)); // log PHP
+        header('Content-Type: text/plain'); // Fuerza salida en texto
+        error_log("📤 JSON que se devolverá: " . json_encode($respuesta));
+        array_walk_recursive($respuesta, function (&$item) {
+        if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
+            }
+        });
         echo json_encode($respuesta);
+        exit();
     break;
     
     case 'aceptarIncidencia':

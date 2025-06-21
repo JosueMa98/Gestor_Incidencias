@@ -7,6 +7,10 @@ include 'conexion.php';
 function obtenerRoles($conn)
 {
     $resultado = $conn->query("SELECT id, nombre FROM roles WHERE id !=1"); //excluir el admin //Guarda la consulta en resultado
+    if (!$resultado) {
+        // Muestra el error específico de MySQL
+        die("❌ Error en la consulta: " . $conn->error);
+    }
     $roles = []; //arreglo
     while ($rol = $resultado->fetch_assoc()) {  //fectch_assoc convierte las filas de la tabla a par clave valor para guardar en el array, ejemplo id-nombre(valor)
         $roles[] = $rol; //guarda cada fila convertida en el arreglo roles para mandarlo al js
@@ -42,7 +46,7 @@ function registrarUsuario($data, $conn)
 
     error_log("Datos procesados: Correo - $correo, Password (hash) - $password");
 
-    $sql = "INSERT INTO usuarios (correo, contraseña, rol_id) VALUES ('$correo', '$password', '$rol')";
+    $sql = "INSERT INTO usuarios (correo, contrasena, rol_id) VALUES ('$correo', '$password', '$rol')";
 
     if (mysqli_query($conn, $sql)) {
         error_log("Usuario registrado con éxito.");
@@ -59,7 +63,7 @@ function iniciarSesion($data, $conn)
     $contra = $data['contraseña'];
 
     // ✅ Consulta para obtener la contraseña y el rol
-    $sql = "SELECT id, contraseña, rol_id FROM usuarios WHERE correo = ?";
+    $sql = "SELECT id, contrasena, rol_id FROM usuarios WHERE correo = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     if (!$stmt) {
@@ -80,7 +84,7 @@ function iniciarSesion($data, $conn)
         $usuario = mysqli_fetch_assoc($resultado);
 
         // ✅ Verificar la contraseña
-        if (password_verify($contra, $usuario['contraseña'])) {
+        if (password_verify($contra, $usuario['contrasena'])) {
             $rol = $usuario['rol_id'];
 
             if ($rol == 1) {
@@ -161,7 +165,7 @@ function registrarMonitor($data, $conn)
     $campos_obligatorios = [
         'marca',
         'modelo',
-        'tamaño_pantalla',
+        'tamano_pantalla',
         'resolucion',
         'tipo_panel',
         'frecuencia_actualizacion',
@@ -183,7 +187,7 @@ function registrarMonitor($data, $conn)
     // Escapar datos
     $marca         = mysqli_real_escape_string($conn, $data['marca']);
     $modelo        = mysqli_real_escape_string($conn, $data['modelo']);
-    $tamaño        = mysqli_real_escape_string($conn, $data['tamaño_pantalla']);
+    $tamaño        = mysqli_real_escape_string($conn, $data['tamano_pantalla']);
     $resolucion    = mysqli_real_escape_string($conn, $data['resolucion']);
     $tipo_panel    = mysqli_real_escape_string($conn, $data['tipo_panel']);
     $frecuencia    = mysqli_real_escape_string($conn, $data['frecuencia_actualizacion']);
@@ -207,7 +211,7 @@ function registrarMonitor($data, $conn)
 
     // Insertar monitor
     $sql = "INSERT INTO lista_monitores (
-                marca, modelo, tamaño_pantalla, resolucion,
+                marca, modelo, tamano_pantalla, resolucion,
                 tipo_panel, frecuencia_actualizacion, puertos_disponibles,
                 tipo_conexion, fecha_adquisicion, garantia,
                 area_asignada, estado, ubicacion_fisica
@@ -426,6 +430,28 @@ function cerrarIncidencia($data, $conn)
 
 function obtenerIncidencias($data, $conn)
 {
+    error_log("📥 Entrando a obtenerIncidencias");
+    error_log("🕵️‍♂️ Dump de data:");
+    ob_start();
+    var_dump($data);
+    error_log(ob_get_clean());
+
+    if (!is_array($data)) {
+        return ['success' => false, 'message' => 'Data no es arreglo'];
+    }
+
+    if (!isset($data['usuario_id'])) {
+        return ['success' => false, 'message' => 'Falta usuario_id'];
+    }
+
+    if (!isset($data['tipo_usuario'])) {
+        return ['success' => false, 'message' => 'Falta tipo_usuario'];
+    }
+
+    if (!is_array($data) || !isset($data['usuario_id']) || !isset($data['tipo_usuario'])) {
+        return ['success' => false, 'message' => 'Parámetros incompletos o no válidos.'];
+    }
+
     $usuario_id = intval($data['usuario_id']);
     $tipo_usuario = intval($data['tipo_usuario']);
 
@@ -467,13 +493,16 @@ function obtenerIncidencias($data, $conn)
         LEFT JOIN solicitudes_cambio c ON i.id = c.incidencia_id
         LEFT JOIN calificaciones ca ON i.id = ca.incidencia_id
         WHERE $condicion
-        GROUP BY i.id
+        /*GROUP BY i.id*/
         ORDER BY i.fecha_creacion DESC";
 
-    // Consulta principal
     $result = mysqli_query($conn, $sql);
 
-    // Consulta secundaria para agrupar todos los cambios
+    if (!$result) {
+        error_log("Error SQL obtenerIncidencias: " . mysqli_error($conn));
+        return ['success' => false, 'message' => 'Error al obtener incidencias.'];
+    }
+
     $sqlCambios = "SELECT incidencia_id, pieza, estado FROM solicitudes_cambio";
     $resultCambios = mysqli_query($conn, $sqlCambios);
 
@@ -492,17 +521,15 @@ function obtenerIncidencias($data, $conn)
         }
     }
 
-    if ($result) {
-        $incidencias = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            $row['cambios'] = $cambiosPorIncidencia[$row['id']] ?? [];
-            $incidencias[] = $row;
-        }
-        return ['success' => true, 'incidencias' => $incidencias];
-    } else {
-        return ['success' => false, 'message' => 'Error al obtener incidencias: ' . mysqli_error($conn)];
+    $incidencias = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $row['cambios'] = $cambiosPorIncidencia[$row['id']] ?? [];
+        $incidencias[] = $row;
     }
+
+    return ['success' => true, 'incidencias' => $incidencias];
 }
+
 
 
 function obtenerLaptopUsuario($conn)
@@ -997,9 +1024,4 @@ function obtenerOrdenTrabajo($data, $conn) {
         //'cambios' => $cambios
     ];
 }
-
-/*
-echo "<pre>"; // Formato más legible para print_r
-obtenerRoles($conn);
-echo "</pre>";
-*/
+?>

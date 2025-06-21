@@ -1,11 +1,13 @@
 <?php
 
-$host ="localhost";
+$host ="db";
 $user ="root";
-$password ="";
+$password = "root"; 
 $dbname = "gestorincidencias";
 
 $conn= new mysqli($host, $user, $password, $dbname);
+$conn->set_charset("utf8");
+
 
 
 ?>
